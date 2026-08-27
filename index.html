@@ -238,7 +238,7 @@
     <div class="container nav-container">
       <a href="#" class="logo"><svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="10" fill="#f5b700"/><path d="M28 14L16 22L12 18L10 20L16 26L30 16L28 14Z" fill="#0b0b0b"/></svg><span class="logo-text">Clement</span><span class="logo-text-light">Ads</span></a>
       <ul class="nav-links">
-        <li><a href="#services">Services</a></li><li><a href="#why-us">Why Us</a></li><li><a href="#how-it-works">How It Works</a></li><li><a href="#faq">FAQ</a></li><li><a href="#contact">Contact</a></li><li><a href="#contact" class="btn-primary btn-small">Order Now</a></li>
+        <li><a href="#services">Services</a></li><li><a href="#why-us">Why Us</a></li><li><a href="#how-it-works">How It Works</a></li><li><a href="#faq">FAQ</a></li><li><a href="#contact">Contact</a></li>
       </ul>
       <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>
@@ -379,7 +379,7 @@
     </div>
   </footer>
 
-  <div class="mobile-nav-overlay"><div class="mobile-nav"><button class="mobile-nav-close">&times;</button><ul><li><a href="#services">Services</a></li><li><a href="#why-us">Why Us</a></li><li><a href="#how-it-works">How It Works</a></li><li><a href="#faq">FAQ</a></li><li><a href="#contact">Contact</a></li><li><a href="#contact" class="btn-primary btn-small">Order Now</a></li></ul></div></div>
+  <div class="mobile-nav-overlay"><div class="mobile-nav"><button class="mobile-nav-close">&times;</button><ul><li><a href="#services">Services</a></li><li><a href="#why-us">Why Us</a></li><li><a href="#how-it-works">How It Works</a></li><li><a href="#faq">FAQ</a></li><li><a href="#contact">Contact</a></li></ul></div></div>
 
   <script>
     // ===== STATIC SERVICES (11) WITH UPDATED PRICES, DESCRIPTIONS & AVATARS =====
@@ -413,18 +413,26 @@
             <div class="service-price">$${svc.price}</div>
             <div class="service-price-type">${svc.price_type === 'Starting from' ? 'Starting from' : 'Fixed price'}</div>
             <div class="service-status active">Active</div>
-            <a href="#contact" class="btn-order">Order Now</a>
+            <a href="#" class="btn-order" onclick="orderService('${svc.name}', ${svc.price}); return false;">Order Now</a>
           </div>
         `;
       });
       container.innerHTML = html;
     }
 
+    // ===== ORDER SERVICE → TELEGRAM =====
+    function orderService(name, price) {
+      const msg = `🛒 Order Request\n\nService: ${name}\nPrice: $${price}\n\nI would like to order this service. Please provide payment details and next steps.`;
+      const url = `https://t.me/Dexstudio1?text=${encodeURIComponent(msg)}`;
+      window.open(url, '_blank');
+      showToast('Opening Telegram to place your order! 🚀', 'success');
+    }
+
     // ===== FOOTER SERVICES =====
     function renderFooterServices() {
       const container = document.getElementById('footer-services');
       if(!container) return;
-      container.innerHTML = servicesData.slice(0,5).map(s => `<li><a href="#contact">${s.name}</a></li>`).join('');
+      container.innerHTML = servicesData.slice(0,5).map(s => `<li><a href="#services">${s.name}</a></li>`).join('');
     }
 
     // ===== DOM READY =====
@@ -462,8 +470,8 @@
         });
       });
 
-      // Smooth scroll
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      // Smooth scroll for nav links (not the order buttons)
+      document.querySelectorAll('a[href^="#"]:not([onclick])').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
           const targetId = this.getAttribute('href');
           if(targetId === '#') return;
@@ -509,6 +517,7 @@
 
     window.showToast = showToast;
     window.sendToTelegram = sendToTelegram;
+    window.orderService = orderService;
   </script>
 </body>
 </html>
